@@ -2,16 +2,21 @@ package de.magicbrothers.coin.main;
 
 import de.magicbrothers.coin.node.Block;
 import de.magicbrothers.coin.node.Blockchain;
+import de.magicbrothers.coin.node.Transaction;
+import de.magicbrothers.coin.node.Wallet;
 
 public class MagicCoin {
 
     public static int difficulty = 5;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         System.out.println("magicCoin startet...");
 
         Blockchain blockchain = new Blockchain();
+
+        Wallet alice = new Wallet();
+        Wallet bob = new Wallet();
 
         Block genesis = new Block("", "Ich bin der Genesis Block");
         genesis.mine();

@@ -37,7 +37,7 @@ public class Block {
             hash = calcHash();
         }
 
-        System.out.println("Block gemined.");
+        System.out.println(hash);
 
     }
 
