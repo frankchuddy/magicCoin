@@ -14,6 +14,7 @@ public class Blockchain {
     }
 
     public void addBlock(Block block) {
+        block.mine();
         blocks.add(block);
     }
 
@@ -35,7 +36,7 @@ public class Blockchain {
                 return false;
             }
 
-            if(!currentBlockHash.substring(0, MagicCoin.difficulty).equals(Utils.getTarget())) {
+            if(!currentBlockHash.substring(0, MagicCoin.difficulty).equals(Utils.getTarget(MagicCoin.difficulty))) {
                 System.out.println("Der Block " + i + " wurde noch nicht gemined. Blockchain nicht vollständig korrekt!");
                 return false;
             }

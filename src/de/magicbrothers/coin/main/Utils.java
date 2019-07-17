@@ -1,8 +1,10 @@
 package de.magicbrothers.coin.main;
 
+import de.magicbrothers.coin.node.Transaction;
+
 import javax.xml.bind.DatatypeConverter;
-import java.io.UnsupportedEncodingException;
 import java.security.*;
+import java.util.ArrayList;
 import java.util.Base64;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -21,9 +23,9 @@ public class Utils {
         return result;
     }
 
-    public static String getTarget() {
+    public static String getTarget(int difficulty) {
         StringBuilder target = new StringBuilder();
-        for(int i = 0; i < MagicCoin.difficulty; i++) {
+        for(int i = 0; i < difficulty; i++) {
             target.append("0");
         }
 
@@ -33,7 +35,8 @@ public class Utils {
     public static KeyPair genKeyPair() throws Exception {
 
         KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-        generator.initialize(2048, new SecureRandom());
+        SecureRandom random = new SecureRandom();
+        generator.initialize(2048, random);
 
         return generator.generateKeyPair();
 
@@ -64,7 +67,29 @@ public class Utils {
     }
 
     public static String keyToString(Key key) {
-        return key.toString();
+        return Base64.getEncoder().encodeToString(key.getEncoded());
+    }
+
+    public static String getMerkleRoot(ArrayList<Transaction> transactions) {
+        int count = transactions.size();
+
+        ArrayList<String> previousTreeLayer = new ArrayList<>();
+
+        for(Transaction transaction : transactions) {
+            previousTreeLayer.add(transaction.transactionId);
+        }
+
+        ArrayList<String> treeLayer = previousTreeLayer;
+        while(count > 1) {
+            treeLayer = new ArrayList<>();
+            for(int i = 1; i < previousTreeLayer.size(); i++) {
+                treeLayer.add(sha256(previousTreeLayer.get(i-1) + previousTreeLayer.get(i)));
+            }
+            count = treeLayer.size();
+            previousTreeLayer = treeLayer;
+        }
+
+        return (treeLayer.size() == 1) ? treeLayer.get(0) : "";
     }
 
 }
