@@ -32,10 +32,14 @@ public class Block {
         int difficulty = MagicCoin.difficulty;
         String target = Utils.getTarget();
 
+        System.out.println("Block wird gemined...");
+
         while(!hash.substring(0, difficulty).equals(target)) {
             nonce++;
             hash = calcHash();
         }
+
+        System.out.println("Blockhash gefunden: " + hash);
 
         System.out.println(hash);
 

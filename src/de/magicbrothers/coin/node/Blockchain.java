@@ -41,6 +41,8 @@ public class Blockchain {
             }
         }
 
+        System.out.println("Die Blockchain ist korrekt!");
+
         return true;
     }
 

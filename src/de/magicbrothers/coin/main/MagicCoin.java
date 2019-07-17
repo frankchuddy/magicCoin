@@ -2,8 +2,8 @@ package de.magicbrothers.coin.main;
 
 import de.magicbrothers.coin.node.Block;
 import de.magicbrothers.coin.node.Blockchain;
-import de.magicbrothers.coin.node.Transaction;
-import de.magicbrothers.coin.node.Wallet;
+
+import java.util.Scanner;
 
 public class MagicCoin {
 
@@ -15,22 +15,26 @@ public class MagicCoin {
 
         Blockchain blockchain = new Blockchain();
 
-        Wallet alice = new Wallet();
-        Wallet bob = new Wallet();
+        Scanner scanner = new Scanner(System.in);
 
-        Block genesis = new Block("", "Ich bin der Genesis Block");
+        System.out.println("Daten für den Genesis Block:");
+        Block genesis = new Block("", scanner.nextLine());
         genesis.mine();
         blockchain.addBlock(genesis);
 
-        Block firstBlock = new Block(blockchain.getLastBlock().getHash(), "Ich bin der erste Block.");
+        System.out.println("Daten für den ersten Block:");
+        Block firstBlock = new Block(blockchain.getLastBlock().getHash(), scanner.nextLine());
         firstBlock.mine();
         blockchain.addBlock(firstBlock);
 
-        Block secondBlock = new Block(blockchain.getLastBlock().getHash(), "Ich bin der zweite Block.");
+        System.out.println("Daten für den zweiten Block:");
+        Block secondBlock = new Block(blockchain.getLastBlock().getHash(), scanner.nextLine());
         secondBlock.mine();
         blockchain.addBlock(secondBlock);
 
-        System.out.println("Ist die Blockchain korrekt? " + blockchain.isValid());
+        System.out.println();
+        System.out.println("Die Blockchain wird geprüft...");
+        blockchain.isValid();
 
     }
 
