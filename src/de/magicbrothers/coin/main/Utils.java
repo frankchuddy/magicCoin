@@ -4,6 +4,8 @@ import de.magicbrothers.coin.node.Transaction;
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.*;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
 
@@ -90,6 +92,20 @@ public class Utils {
         }
 
         return (treeLayer.size() == 1) ? treeLayer.get(0) : "";
+    }
+
+    public static PublicKey getPublicKeyFromString(String address) throws Exception {
+        byte[] publicBytes = Base64.getDecoder().decode(address);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        return keyFactory.generatePublic(keySpec);
+    }
+
+    public static PrivateKey getPrivateKeyFromString(String address) throws Exception {
+        byte[] privateBytes = Base64.getDecoder().decode(address);
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        return keyFactory.generatePrivate(keySpec);
     }
 
 }

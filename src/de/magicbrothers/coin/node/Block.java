@@ -67,4 +67,7 @@ public class Block {
         return hash;
     }
 
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
+    }
 }

@@ -19,7 +19,7 @@ public class TransactionOutput {
     }
 
     public boolean isMine(PublicKey publicKey) {
-        return publicKey == to;
+        return publicKey.equals(to);
     }
 
 }

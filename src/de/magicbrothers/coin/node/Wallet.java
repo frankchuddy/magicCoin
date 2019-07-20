@@ -14,17 +14,20 @@ public class Wallet {
     private PrivateKey privateKey;
     private PublicKey publicKey;
 
-    public HashMap<String, TransactionOutput> UTXOs = new HashMap<>();
-
     public Wallet() throws Exception {
         init();
+    }
+
+    public Wallet(PublicKey publicKey, PrivateKey privateKey) {
+        this.privateKey = privateKey;
+        this.publicKey = publicKey;
     }
 
     private void init() throws Exception {
         KeyPair pair = Utils.genKeyPair();
         privateKey = pair.getPrivate();
         publicKey = pair.getPublic();
-        System.out.println("Keys erstellt!");
+        System.out.println("Keypair erstellt!");
     }
 
     public PrivateKey getPrivateKey() {
@@ -41,7 +44,7 @@ public class Wallet {
         for(Map.Entry<String, TransactionOutput> i : Transaction.UTXOs.entrySet()) {
             TransactionOutput UTXO = i.getValue();
             if(UTXO.isMine(publicKey)) {
-                UTXOs.put(UTXO.id, UTXO);
+                Transaction.UTXOs.put(UTXO.id, UTXO);
                 total += UTXO.amount;
             }
         }
@@ -58,7 +61,7 @@ public class Wallet {
         ArrayList<TransactionInput> inputs = new ArrayList<>();
 
         float total = 0;
-        for(Map.Entry<String, TransactionOutput> i : UTXOs.entrySet()) {
+        for(Map.Entry<String, TransactionOutput> i : Transaction.UTXOs.entrySet()) {
             TransactionOutput UTXO = i.getValue();
             total += UTXO.amount;
             inputs.add(new TransactionInput(UTXO.id));
@@ -67,9 +70,10 @@ public class Wallet {
 
         Transaction transaction = new Transaction(publicKey, to, amount, inputs);
         transaction.sign(privateKey);
+        transaction.processTransaction();
 
         for(TransactionInput i : inputs) {
-            UTXOs.remove(i.transactionOutputId);
+            Transaction.UTXOs.remove(i.transactionOutputId);
         }
 
         return transaction;
